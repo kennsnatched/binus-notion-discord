@@ -31,7 +31,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           NOTION_URL: https://app.notion.com/p/Student-Information-LH11-3dbdab153930801bbd89e82b2ab42bfc
-        run: python test_discord.py
+        run: python checker.py
 
       - name: Save detected assignments
         run: |
