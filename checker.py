@@ -70,68 +70,79 @@ def get_tasks():
         )
 
         print("Opening Notion...")
+
         page.goto(
             NOTION_URL,
             wait_until="domcontentloaded",
             timeout=60000
         )
 
-        page.wait_for_timeout(5000)
+        page.wait_for_timeout(10000)
 
-        # Scroll several times so lazy-loaded Notion content appears.
-        for _ in range(8):
+        print("Page title:", page.title())
+
+        # Scroll through the page so lazy-loaded content appears.
+        for _ in range(12):
             page.mouse.wheel(0, 1200)
-            page.wait_for_timeout(1000)
+            page.wait_for_timeout(700)
+
+        # Get all visible text from the rendered page.
+        body_text = page.locator("body").inner_text()
+
+        print("Page text length:", len(body_text))
+        print("----- NOTION TEXT START -----")
+        print(body_text[:10000])
+        print("----- NOTION TEXT END -----")
 
         tasks = []
 
-        checkboxes = page.locator('[role="checkbox"]')
+        # Look for lines that resemble the assignment checklist.
+        lines = [
+            line.strip()
+            for line in body_text.splitlines()
+            if line.strip()
+        ]
 
-        print("Checkboxes found:", checkboxes.count())
+        for line in lines:
+            # Ignore headings and obvious navigation text.
+            if len(line) < 5:
+                continue
 
-        for i in range(checkboxes.count()):
-            checkbox = checkboxes.nth(i)
+            lower = line.lower()
 
-            try:
-                text = checkbox.evaluate("""
-                    el => {
-                        let block = el.closest('[data-block-id]');
-                        if (block) return block.innerText;
+            ignored = [
+                "list tugas oktober",
+                "tugas dan deadline",
+                "student information",
+                "share",
+                "search",
+                "comments"
+            ]
 
-                        let parent = el.parentElement;
-                        if (parent) return parent.innerText;
+            if any(x in lower for x in ignored):
+                continue
 
-                        return el.innerText;
-                    }
-                """)
+            # Look for the actual assignment names from the page.
+            assignment_keywords = [
+                "ebp",
+                "ux lab",
+                "cb:",
+            ]
 
-                checked = checkbox.get_attribute("aria-checked")
-
-                if not text:
-                    continue
-
-                text = re.sub(r"\\s+", " ", text).strip()
-
-                # Ignore very short/non-assignment controls.
-                if len(text) < 5:
-                    continue
-
+            if any(keyword in lower for keyword in assignment_keywords):
                 tasks.append({
-                    "text": text,
-                    "checked": checked == "true"
+                    "text": line,
+                    "checked": False
                 })
 
-            except Exception as e:
-                print("Could not read checkbox:", e)
-
-        browser.close()
-
-        # Remove duplicates
+        # Remove duplicates.
         unique = {}
 
         for task in tasks:
             key = task["text"].lower()
             unique[key] = task
+
+        print("Assignments detected:", len(unique))
 
         return list(unique.values())
 
