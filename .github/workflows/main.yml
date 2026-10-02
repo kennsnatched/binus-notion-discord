@@ -1,0 +1,42 @@
+name: Notion Assignment Checker
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-notion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run assignment checker
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          NOTION_URL: https://app.notion.com/p/Student-Information-LH11-3dbdab153930801bbd89e82b2ab42bfc
+        run: python checker.py
+
+      - name: Save detected assignments
+        run: |
+          git config user.name "BINUS Assignment Bot"
+          git config user.email "actions@github.com"
+          git add assignments.json
+          git diff --cached --quiet || git commit -m "Update assignment state"
+          git push
