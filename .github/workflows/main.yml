@@ -37,6 +37,11 @@ jobs:
         run: |
           git config user.name "BINUS Assignment Bot"
           git config user.email "actions@github.com"
+      
+          if [ ! -f assignments.json ]; then
+            echo "{}" > assignments.json
+          fi
+      
           git add assignments.json
           git diff --cached --quiet || git commit -m "Update assignment state"
           git push
