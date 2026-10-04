@@ -1,14 +1,6 @@
 {
-  "ebp - membuat bpmn dan swimlane": {
-    "text": "EBP - Membuat BPMN dan Swimlane",
-    "checked": false
-  },
-  "ux lab - membuat user journey": {
-    "text": "UX Lab - Membuat User Journey",
-    "checked": false
-  },
-  "cb: pancasila - proposal penelitian": {
-    "text": "CB: Pancasila - Proposal Penelitian",
+  "cb: pancasila": {
+    "text": "CB: Pancasila",
     "checked": false
   }
 }
