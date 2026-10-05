@@ -7,12 +7,12 @@ DISCORD_WEBHOOK_URL = os.environ["DISCORD_WEBHOOK_URL"]
 payload = {
     "embeds": [
         {
-            "title": "📚 NEW ASSIGNMENT",
-            "description": "**TEST — Tugas Baru Discord**",
+            "title": "📚 NEW ASSIGNMENT LH11",
+            "description": "**TEST — EBP SESSION - Expenditure Cycle**",
             "fields": [
                 {
                     "name": "📅 Status",
-                    "value": "Testing GitHub → Discord"
+                    "value": "Testing Kenn → Discord"
                 }
             ],
             "footer": {
