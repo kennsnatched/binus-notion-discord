@@ -32,7 +32,7 @@ def send_discord(task):
     payload = {
         "embeds": [
             {
-                "title": "📚 NEW ASSIGNMENT",
+                "title": "📚 NEW ASSIGNMENT BINUS",
                 "description": f"**{task['text']}**",
                 "url": NOTION_URL,
                 "footer": {
